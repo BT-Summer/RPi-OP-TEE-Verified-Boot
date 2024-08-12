@@ -17,7 +17,7 @@ make
 This should generate a file in `optee/out` called `rpi3-sccard.img` which can be simply flashed to an SD card using your favorite image flasher, then booted on a Raspberry Pi.
 
 ## Demo
-
+TODO: will be added as we move toward an upcoming presentation
 
 ## Support
 This is *not* an official OP-TEE, U-Boot, or TF-A project; any updates should be pushed through the Issues tab in this repo.
@@ -31,7 +31,7 @@ Based on [OP-TEE](https://github.com/OP-TEE), [U-Boot](https://github.com/u-boot
 Developed by [Eden Hamilton](https://github.com/EdenH1234) and [Thomas Gymer](https://github.com/TommyGymer)
 
 ## License
-For open source projects, say how it is licensed.
+TODO: will be added tomorrow to clarify
 
 ## Project status
 We are currently only maintaining this project, though may pick it up again as part of university projects.
