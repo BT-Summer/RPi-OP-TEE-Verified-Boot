@@ -2,6 +2,7 @@
 
 ## Description
 A TEE solution for Raspberry Pi using OP-TEE, built on TF-A, U-Boot, and buildroot.
+This is our implementation to get a version of this working, and is *not* supported by the above projects.
 
 ## Usage
 
@@ -19,7 +20,7 @@ This should generate a file in `optee/out` called `rpi3-sccard.img` which can be
 
 
 ## Support
-Any updates should be pushed through the Issues tab
+This is *not* an official OP-TEE, U-Boot, or TF-A project; any updates should be pushed through the Issues tab in this repo.
 
 ## Contributing
 We are purely interested only in updates for running these scripts on Ubuntu 22.04; feel free to fork if you wish to get this working on another distro.
