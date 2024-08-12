@@ -6,7 +6,7 @@ This is our implementation to get a version of this working, and is *not* suppor
 
 ## Usage
 
-The only prior dependency, while building on an Ubuntu 22.04 system, should be `make` which can be installed via `sudo apt install make`
+The only prior dependency, while building on an Ubuntu 22.04 system, should be `make` which can be installed via `sudo apt install make`, though it is recommended to build on a VM or container to remove external factors
 
 ```bash
 git clone https://github.com/BT-Summer/RPi-OP-TEE-Verified-Boot.git
