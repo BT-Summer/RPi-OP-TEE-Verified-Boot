@@ -1,6 +1,6 @@
 # Verified Boot for RPi
 
-[![Rust Binary File Corruptor](https://github.com/BT-Summer/RPi-OP-TEE-Verified-Boot/actions/workflows/rust.yml/badge.svg)](https://github.com/BT-Summer/RPi-OP-TEE-Verified-Boot/actions/workflows/rust.yml)
+[![Rust Binary File Corruptor (no tests added for this yet)](https://github.com/BT-Summer/RPi-OP-TEE-Verified-Boot/actions/workflows/rust.yml/badge.svg)](https://github.com/BT-Summer/RPi-OP-TEE-Verified-Boot/actions/workflows/rust.yml)
 
 ## Description
 A TEE solution for Raspberry Pi using OP-TEE, built on TF-A, U-Boot, and buildroot.
