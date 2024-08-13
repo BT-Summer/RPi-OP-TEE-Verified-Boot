@@ -85,6 +85,9 @@ fit: boot-files gen-keys
 	./config-its-u-boot.sh
 	./mkimage -f image.its -K bcm2837-rpi-3-b-plus-u-boot.dtb -k keys -r image.fit # Make fit and sign with key, put ECDSA key into DTB
 	fdtput -t s bcm2837-rpi-3-b-plus-u-boot.dtb /signature required-mode all # Mark all signatures as required
+	fdtput bcm2837-rpi-3-b-plus-u-boot.dtb -t s /signature/ecc_dev required conf # Mark specific signature as required too
+
+
 	rm -f image.fit
 	
 	# Responsible for embedding the correct DTB into the FIT file
@@ -92,6 +95,9 @@ fit: boot-files gen-keys
 	./config-its-linux.sh
 	./mkimage -f image.its -K bcm2710-rpi-3-b-plus-linux.dtb -k keys -r image.fit # Make fit and sign with key, put ECDSA key into DTB
 	fdtput -t s bcm2710-rpi-3-b-plus-linux.dtb /signature required-mode all # Mark all signatures as required
+	fdtput bcm2710-rpi-3-b-plus-linux.dtb -t s /signature/ecc_dev required conf # Mark specific signature as required too
+
+
 
 rebuild-uboot:
 	echo "#### rebuild ####"
