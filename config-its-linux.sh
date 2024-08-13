@@ -49,8 +49,8 @@ echo '/dts-v1/;
 			loadables = "tee-1";
 			fdt = "fdt-1";
 			signature-1 {
-				algo = "sha256,rsa2048";
-				key-name-hint = "dev";
+				algo = "sha256,ecdsa256";
+				key-name-hint = "ecc_dev";
 				sign-images = "fdt", "kernel", "loadables";
 			};
 		};

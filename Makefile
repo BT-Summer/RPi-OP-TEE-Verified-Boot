@@ -76,13 +76,22 @@ build:
 
 fit: boot-files gen-keys
 	echo "#### create fit file ####"
-	# Sign the u-boot FDT
+
+	# Add signature nodes to DTBs - mkimage can't do this for ECDSA, so we do it manually 
+	python3 add-signature-node.py bcm2837-rpi-3-b-plus-u-boot.dtb
+	python3 add-signature-node.py bcm2710-rpi-3-b-plus-linux.dtb
+	
+	# Responsible for embedding the verification key into the DTB
 	./config-its-u-boot.sh
-	./optee/u-boot/tools/mkimage -f image.its -K bcm2837-rpi-3-b-plus-u-boot.dtb -k keys -r image.fit
-	rm -f image.fit image.its
-	# Sign the linux DTB
+	./mkimage -f image.its -K bcm2837-rpi-3-b-plus-u-boot.dtb -k keys -r image.fit # Make fit and sign with key, put ECDSA key into DTB
+	fdtput -t s bcm2837-rpi-3-b-plus-u-boot.dtb /signature required-mode all # Mark all signatures as required
+	rm -f image.fit
+	
+	# Responsible for embedding the correct DTB into the FIT file
+	rm -f image.its
 	./config-its-linux.sh
-	./optee/u-boot/tools/mkimage -f image.its -K bcm2710-rpi-3-b-plus-linux.dtb -k keys -r image.fit
+	./mkimage -f image.its -K bcm2710-rpi-3-b-plus-linux.dtb -k keys -r image.fit # Make fit and sign with key, put ECDSA key into DTB
+	fdtput -t s bcm2710-rpi-3-b-plus-linux.dtb /signature required-mode all # Mark all signatures as required
 
 rebuild-uboot:
 	echo "#### rebuild ####"
@@ -100,10 +109,12 @@ keys:
 	mkdir keys
 
 keys/dev.key:
-	openssl genrsa -out keys/dev.key 2048
+	openssl ecparam -name prime256v1 -genkey -noout -out keys/ecc_dev.pem
+	# openssl genrsa -out keys/dev.key 2048
 	
 keys/dev.crt:
-	openssl req -batch -new -x509 -key keys/dev.key -out keys/dev.crt
+	# ECDSA does not require you to specify a public key as it van be made from the private key
+	# openssl req -batch -new -x509 -key keys/dev.key -out keys/dev.crt
 
 ########## SET UP BOOT FILES ##########
 
