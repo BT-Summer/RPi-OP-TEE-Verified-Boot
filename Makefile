@@ -1,6 +1,6 @@
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
-all: init cortex-a53-1530924 update-u-boot-env update-image-build preloaded-dtb modify-tf-a build fit build-uboot custom_armstub image
+all: init cortex-a53-1530924 update-u-boot-env update-image-build preloaded-dtb modify-tf-a build build-uboot fit custom_armstub image
 
 ########## BUILD TOOLS ###############
 
