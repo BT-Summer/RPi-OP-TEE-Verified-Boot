@@ -3,6 +3,7 @@ acpica-tools
 autoconf
 automake
 bc
+binutils-aarch64-linux-gnu
 bison
 build-essential
 ccache
@@ -15,6 +16,8 @@ expect
 fastboot
 flex
 ftp-upload
+gcc
+gcc-aarch64-linux-gnu
 gdisk
 git
 libattr1-dev
