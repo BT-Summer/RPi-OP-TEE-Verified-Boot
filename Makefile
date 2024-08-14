@@ -99,14 +99,12 @@ build:
 fit: boot-files gen-keys
 	echo "#### create fit file ####"
 	rm -f image.fit
-	# Sign the u-boot FDT
-	./config-its-u-boot.sh
-	./u-boot/tools/mkimage -f image.its -K bcm2837-rpi-3-b-plus-u-boot.dtb -k keys -r image.fit
-	rm -f image.fit image.its
-	# Sign the linux DTB
-	./config-its-linux.sh
-	./u-boot/tools/mkimage -f image.its -K bcm2710-rpi-3-b-plus-linux.dtb -k keys -r image.fit
 
+	# Sign the DTB to be used by uboot
+	# However, the DTB in the FIT is to be used by the linux kernel
+	./config-its-linux.sh
+	./u-boot/tools/mkimage -f image.its -K bcm2837-rpi-3-b-plus-u-boot.dtb -k keys -r image.fit
+	
 # For use with CONFIG_OF_EMBED
 rebuild-uboot:
 	echo "#### rebuild ####"
