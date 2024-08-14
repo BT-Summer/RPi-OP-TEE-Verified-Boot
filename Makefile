@@ -110,6 +110,11 @@ fit: boot-files gen-keys
 	./config-its-linux.sh
 	./optee/u-boot/tools/mkimage -f image.its -K bcm2837-rpi-3-b-plus-u-boot.dtb -k keys -r image.fit
 
+	# Sign the DTB to be used by uboot
+	# However, the DTB in the FIT is to be used by the linux kernel
+	./config-its-linux.sh
+	./u-boot/tools/mkimage -f image.its -K bcm2837-rpi-3-b-plus-u-boot.dtb -k keys -r image.fit
+	
 # For use with CONFIG_OF_EMBED
 rebuild-uboot:
 	echo "#### rebuild ####"
@@ -145,7 +150,7 @@ keys:
 	mkdir keys
 
 keys/dev.key:
-	openssl genrsa -out keys/dev.key 2048
+	openssl genrsa -out keys/dev.key 3072
 	
 keys/dev.crt:
 	openssl req -batch -new -x509 -key keys/dev.key -out keys/dev.crt
