@@ -16,18 +16,6 @@ echo '/dts-v1/;
 				algo = "sha256";
 			};
 		};
-		tee-1 {
-			description = "bootloader";
-			data = /incbin/("kernel8.img");
-			type = "standalone";
-			arch = "arm64";
-			compression = "none";
-			load =  <0x08400000>;
-			entry = <0x08400000>;
-			hash-1 {
-				algo = "sha256";
-			};
-		};
 		fdt-1 {
 			description = "device tree";
 			data = /incbin/("bcm2837-rpi-3-b-plus-u-boot.dtb");
@@ -46,12 +34,11 @@ echo '/dts-v1/;
 		config-1 {
 			description = "default configuration";
 			kernel = "kernel-1";
-			loadables = "tee-1";
 			fdt = "fdt-1";
 			signature-1 {
-				algo = "sha256,rsa2048";
+				algo = "sha256,rsa3072";
 				key-name-hint = "dev";
-				sign-images = "fdt", "kernel", "loadables";
+				sign-images = "fdt", "kernel";
 			};
 		};
 	};
