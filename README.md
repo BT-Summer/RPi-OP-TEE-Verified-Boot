@@ -31,7 +31,7 @@ Based on [OP-TEE](https://github.com/OP-TEE), [U-Boot](https://github.com/u-boot
 Developed by [Eden Hamilton](https://github.com/EdenH1234) and [Thomas Gymer](https://github.com/TommyGymer)
 
 ## License
-TODO: will be added tomorrow to clarify
+Distributed under the BSD 3-Clause License
 
 ## Project status
 We are currently only maintaining this project, though may pick it up again as part of university projects.
