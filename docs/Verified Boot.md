@@ -9,6 +9,17 @@ Raspberry Pi themselves have provided [documentation](https://www.google.com/url
 This implementation places the key modulus in OTP, allowing recovery of a key to check that the OS image and boot loader are correctly signed, but relies on the key having a modulus to place in OTP. The alternatives would be to store the entire key in OTP, or to check the key against a hash stored in OTP.
 It also requires firmware support for reading the OTP at boot, leaving support for older versions of the Pi unlikely at best, implicating the use of EEPROM to prevent anything but physical access from modifying the boot loader.
 
+### Boot tree
+```
++-----------------+
+|      TF-A       |
++--------+--------+
+| OP-TEE | U-Boot |
++--------+--------+
+         | Linux  |
+         +--------+
+```
+
 ## [[U-Boot]]
 
 > See [About U-Boot](https://docs.u-boot.org/en/latest/#)

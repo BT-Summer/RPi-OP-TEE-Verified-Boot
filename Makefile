@@ -1,6 +1,6 @@
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
-all: init cortex-a53-1530924 update-u-boot-env update-image-build preloaded-dtb modify-tf-a build build-uboot fit custom_armstub image
+all: init cortex-a53-1530924 update-u-boot-env preloaded-dtb modify-tf-a build build-uboot fit custom_armstub image
 
 ########## BUILD TOOLS ###############
 
@@ -58,6 +58,9 @@ update-image-build:
 	python3 image-build.py
 	# Create FIT file place holder
 	touch image.fit
+	# Create DTB file place holder
+	touch bcm2710-rpi-3-b-plus.dtb
+	touch bcm2837-rpi-3-b-plus-u-boot.dtb
 
 # Sets TF-A's debug level to full
 tf-a-debug-50:
@@ -98,7 +101,14 @@ build:
 
 fit: boot-files gen-keys
 	echo "#### create fit file ####"
-	rm -f image.fit
+	# rm -f image.fit
+	# Sign the u-boot FDT
+	# ./config-its-u-boot.sh
+	# ./optee/u-boot/tools/mkimage -f image.its -K bcm2837-rpi-3-b-plus-u-boot.dtb -k keys -r image.fit
+	rm -f image.fit image.its
+	# Sign the linux DTB
+	./config-its-linux.sh
+	./optee/u-boot/tools/mkimage -f image.its -K bcm2837-rpi-3-b-plus-u-boot.dtb -k keys -r image.fit
 
 	# Sign the DTB to be used by uboot
 	# However, the DTB in the FIT is to be used by the linux kernel
@@ -125,6 +135,10 @@ image:
 	rm -f optee/out/boot/image.fit
 	cp -f image.fit optee/out/boot/image.fit
 	sudo chmod 755 optee/out/boot/image.fit
+
+	rm -f optee/out/boot/bcm2710-rpi-3-b-plus-linux.dtb
+	cp -f bcm2837-rpi-3-b-plus-u-boot.dtb optee/out/boot/bcm2710-rpi-3-b-plus.dtb
+	sudo chmod 755 optee/out/boot/bcm2710-rpi-3-b-plus.dtb
 
 	./optee/build/rpi3/scripts/create-image.sh -w optee
 
