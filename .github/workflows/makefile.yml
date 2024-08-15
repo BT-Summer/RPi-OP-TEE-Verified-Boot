@@ -18,5 +18,8 @@ jobs:
         key: ${{ hashFiles('dependencies-22.04.txt') }}
 
     - name: Build
-      run: make          
+      run: make
+
+    - name: Test
+      run: make test
       
