@@ -1,9 +1,11 @@
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
+.PHONY: all
 all: init cortex-a53-1530924 update-u-boot-env preloaded-dtb modify-tf-a build build-uboot fit custom_armstub image
 
 ########## BUILD TOOLS ###############
 
+.PHONY: tools
 tools: corruptor/target/release/corruptor
 
 corruptor/target/release/corruptor:
@@ -12,6 +14,7 @@ corruptor/target/release/corruptor:
 
 ########## FILE SET UP ###############
 
+.PHONY: init
 init:
 	echo "#### init ####"
 	sudo add-apt-repository universe -y
@@ -22,12 +25,14 @@ init:
 	cp optee/build/Makefile Makefile-optee.bck
 
 # Apply fix for cotext a53 errata 1530924 to TF-A's flags
+.PHONY: cortex-a53-1530924
 cortex-a53-1530924:
 	echo "#### cortex fix ####"
 	sed -i -e 's/TF_A_FLAGS ?= \\/TF_A_FLAGS ?= ERRATA_A53_1530924=1 \\/' optee/build/Makefile
 
 # Not used
 # Replaces all bcm dtb references to the upstream dtbs
+.PHONY: update-dtbs-2710
 update-dtbs-2710:
 	echo "#### update dtbs ####"
 	sed -i -e 's/bcm2837-rpi-3-b-plus.dtb/bcm2710-rpi-3-b-plus.dtb/' optee/build/Makefile
@@ -37,6 +42,7 @@ update-dtbs-2710:
 
 # Not used
 # Replaces all bcm dtb references to the downstream dtbs
+.PHONY: update-dtbs-2837
 update-dtbs-2837:
 	echo "#### update dtbs ####"
 	sed -i -e 's/bcm2710-rpi-3-b-plus.dtb/bcm2837-rpi-3-b-plus.dtb/' optee/build/Makefile
@@ -45,12 +51,14 @@ update-dtbs-2837:
 	sed -i -e 's/bcm2710-rpi-3-b.dtb/bcm2837-rpi-3-b.dtb/' optee/build/rpi3.mk
 
 # Replace u-boot.env source with custom env
+.PHONY: update-u-boot-env
 update-u-boot-env:
 	echo "#### update u-boot env ####"
-	rm ./optee/build/rpi3/firmware/uboot.env.txt
+	rm -f ./optee/build/rpi3/firmware/uboot.env.txt
 	./config-u-boot-env.sh
 
 # Update which files the optee Makefile will place into the output disk image
+.PHONY: update-image-build
 update-image-build:
 	echo "#### update image builder ####"
 	rm -f optee/out/rpi3-sdcard.img
@@ -63,17 +71,20 @@ update-image-build:
 	touch bcm2837-rpi-3-b-plus-u-boot.dtb
 
 # Sets TF-A's debug level to full
+.PHONY: tf-a-debug-50
 tf-a-debug-50:
 	echo "#### set tf-a log level to 50 ####"
 	sed -i -e 's/\tLOG_LEVEL=40 \\/\tLOG_LEVEL=50 \\/' optee/build/Makefile
 	sed -i -e 's|printf("%sVA:0x%lx PA:0x%llx size:0x%zx ",|printf("%sVA:0x%lx PA:0x%lx size:0x%zx ",|' optee/trusted-firmware-a/lib/xlat_tables_v2/xlat_tables_utils.c
 
 # Set the preloaded DTB config to the address in config.txt which the SoC will use
+.PHONY: preloaded-dtb
 preloaded-dtb:
 	echo "#### set the address of the preloaded dtb ####"
 	sed -i -e 's/\tRPI3_PRELOADED_DTB_BASE=0x00010000 \\/\tRPI3_PRELOADED_DTB_BASE=0x01000000 \\/' optee/build/Makefile
 
 # Clone and build v2024.07 of u-boot
+.PHONY: build-uboot
 build-uboot:
 	echo "#### u-boot v2024.07 ####"
 	rm -rf u-boot
@@ -86,11 +97,13 @@ build-uboot:
 	$(MAKE) CROSS_COMPILE=aarch64-linux-gnu- -C ./u-boot
 
 # Update a .c file in TF-A to set the register u-boot requires for CONFIG_OF_PRIOR_STAGE 
+.PHONY: modify-tf-a
 modify-tf-a:
 	python3 tf-a-mod.py
 
 ########## BUILD #####################
 
+.PHONY: build
 build:
 	echo "#### build toolchains ####"
 	$(MAKE) -C ./optee/build -j3 toolchains
@@ -99,6 +112,7 @@ build:
 	echo "#### build ####"
 	$(MAKE) -C ./optee/build
 
+.PHONY: fit
 fit: boot-files gen-keys
 	echo "#### create fit file ####"
 	rm -f image.fit
@@ -108,14 +122,16 @@ fit: boot-files gen-keys
 	./u-boot/tools/mkimage -f image.its -K bcm2837-rpi-3-b-plus-u-boot.dtb -k keys -r image.fit
 	
 # For use with CONFIG_OF_EMBED
+.PHONY: rebuild-uboot
 rebuild-uboot:
 	echo "#### rebuild ####"
 	$(MAKE) -C ./optee/build clean
 	rm -f optee/out/rpi3-sdcard.img
 	# Rebuild u-boot specifying the signed DTB
-	$(MAKE) -C ./optee/build EXT_DTB=~/Downloads/custom-fit/bcm2710-rpi-3-b-plus.dtb	
+	$(MAKE) -C ./optee/build EXT_DTB=~/Downloads/custom-fit/bcm2710-rpi-3-b-plus.dtb
 
 # For use with CONFIG_OF_PRIOR_STAGE
+.PHONY: image
 image:
 	echo "#### construct sd card image ####"
 	rm -f optee/out/rpi3-sdcard.img
@@ -136,6 +152,7 @@ image:
 
 ########## KEYS #######################
 # TODO: this should be able to generate a selection of keys
+.PHONY: gen-keys
 gen-keys: keys keys/dev.key keys/dev.crt
 
 keys:
@@ -152,6 +169,7 @@ keys/dev.crt:
 # U-Boot and Linux require different DTBs:
 # 	- U-Boot's must be signed
 # 	- Linux's must be used when generating the signed FIT image
+.PHONY: boot-files
 boot-files: clean-boot
 	echo "#### setting up fit files ####"
 	cp optee/linux/arch/arm64/boot/Image Image
@@ -176,18 +194,21 @@ boot-files: clean-boot
 
 ########## CLEAN ######################
 
+.PHONY: clean
 clean: clean-boot
 	$(MAKE) -C ./optee/build clean -j `nproc`
-	# cp -f Makefile-optee.bck optee/build/Makefile
 
+.PHONY: clean-boot
 clean-boot:
 	rm -f Image armstub8.bin kernel8.img bcm2837-rpi-3-b-plus.dtb bcm2710-rpi-3-b-plus.dtb image.fit image.its bcm2710-rpi-3-b-plus-linux.dtb bcm2837-rpi-3-b-plus-u-boot.dtb tmp.dts Makefile-optee.bck
 
+.PHONY: remove
 remove: clean-boot
 	sudo rm -rf optee
 
 ########## CUSTOM ARMSTUB8 ############
 
+.PHONY: custom_armstub
 custom_armstub: armstub/clean armstub armstub/armstub8.bin
 
 armstub:
@@ -218,8 +239,38 @@ armstub/tos-fw.bin: armstub/fip.bin
 armstub/new_fip.bin: armstub/u-boot.bin armstub/tos-fw.bin
 	cd armstub && ../optee/trusted-firmware-a/tools/fiptool/fiptool create --tb-fw tb-fw.bin --soc-fw soc-fw.bin --tos-fw tos-fw.bin --tos-fw-extra1 tos-fw-extra1.bin --tos-fw-extra2 tos-fw-extra2.bin --nt-fw u-boot.bin new_fip.bin
 
+.PHONY: armstub/clean
 armstub/clean:
 	rm -rf ./armstub
 
-.PHONY: all init cortex-a53-15330924 build fit rebuild-u-boot gen-keys boot-files clean clean-boot remove update-dtbs update-u-boot-order tools armstub/clean custom_armstub
+########## TESTS ######################
+
+.PHONY: test
+test: test-setup test-armstub8 test-fit test-dtb
+
+.PHONY: test-setup
+test-setup:
+	rm -rf testing
+	mkdir -p testing
+
+.PHONY: test-armstub8
+test-armstub8:
+	mkdir -p testing/armstub
+	cp -f optee/out/boot/armstub8.bin testing/armstub/armstub8.bin
+	cat testing/armstub/armstub8.bin | tail -c +131073 > testing/armstub/fip.bin
+	cat testing/armstub/armstub8.bin | head -c 131072 > testing/armstub/bl1.bin
+	optee/trusted-firmware-a/tools/fiptool/fiptool unpack --out testing/armstub testing/armstub/fip.bin
+	python3 tests/armstub8-tests.py
+
+.PHONY: test-fit
+test-fit:
+	mkdir -p testing/fit
+	cp -f optee/out/boot/image.fit testing/fit/image.fit
+	u-boot/tools/fdtgrep -n "/configurations" -s -p "value" testing/fit/image.fit | python3 tests/fit-tests.py
+
+.PHONY: test-dtb
+test-dtb:
+	mkdir -p testing/dtb
+	cp -f  optee/out/boot/bcm2710-rpi-3-b-plus.dtb testing/dtb/bcm2710-rpi-3-b-plus.dtb
+	u-boot/tools/fdtgrep -n "/signature" -s testing/dtb/bcm2710-rpi-3-b-plus.dtb
 
