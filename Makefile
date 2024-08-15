@@ -260,12 +260,13 @@ test-armstub8:
 	cat testing/armstub/armstub8.bin | tail -c +131073 > testing/armstub/fip.bin
 	cat testing/armstub/armstub8.bin | head -c 131072 > testing/armstub/bl1.bin
 	optee/trusted-firmware-a/tools/fiptool/fiptool unpack --out testing/armstub testing/armstub/fip.bin
+	python3 tests/armstub8-tests.py
 
 .PHONY: test-fit
 test-fit:
 	mkdir -p testing/fit
 	cp -f optee/out/boot/image.fit testing/fit/image.fit
-	u-boot/tools/fdtgrep -n "/configurations" -s -p "value" testing/fit/image.fit
+	u-boot/tools/fdtgrep -n "/configurations" -s -p "value" testing/fit/image.fit | python3 tests/fit-tests.py
 
 .PHONY: test-dtb
 test-dtb:
