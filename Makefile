@@ -57,6 +57,7 @@ update-u-boot-env:
 	rm -f ./optee/build/rpi3/firmware/uboot.env.txt
 	./config-u-boot-env.sh
 
+# Not used
 # Update which files the optee Makefile will place into the output disk image
 .PHONY: update-image-build
 update-image-build:
@@ -96,7 +97,7 @@ build-uboot:
 	$(MAKE) -C ./u-boot rpi_3_b_plus_defconfig
 	#rm -f u-boot/.config
 	#cp u-boot.config u-boot/.config
-	$(MAKE) CROSS_COMPILE=aarch64-linux-gnu- -C ./u-boot
+	$(MAKE) CROSS_COMPILE=aarch64-linux-gnu- -C ./u-boot -j$(nproc)
 
 # Update a .c file in TF-A to set the register u-boot requires for CONFIG_OF_PRIOR_STAGE 
 .PHONY: modify-tf-a
@@ -148,7 +149,7 @@ image:
 	cp -f image.fit optee/out/boot/image.fit
 	sudo chmod 755 optee/out/boot/image.fit
 
-	rm -f optee/out/boot/bcm2710-rpi-3-b-plus-linux.dtb
+	rm -f optee/out/boot/bcm2710-rpi-3-b-plus.dtb
 	cp -f bcm2837-rpi-3-b-plus-u-boot.dtb optee/out/boot/bcm2710-rpi-3-b-plus.dtb
 	sudo chmod 755 optee/out/boot/bcm2710-rpi-3-b-plus.dtb
 
@@ -275,6 +276,8 @@ test-fit:
 .PHONY: test-dtb
 test-dtb:
 	mkdir -p testing/dtb
-	cp -f  optee/out/boot/bcm2710-rpi-3-b-plus.dtb testing/dtb/bcm2710-rpi-3-b-plus.dtb
+	cp -f optee/out/boot/bcm2710-rpi-3-b-plus.dtb testing/dtb/bcm2710-rpi-3-b-plus.dtb
+	cp -f bcm2837-rpi-3-b-plus-u-boot.dtb testing/dtb/u-boot.dtb
+	cp -f bcm2710-rpi-3-b-plus-linux.dtb testing/dtb/linux.dtb
 	u-boot/tools/fdtgrep -n "/signature" -s testing/dtb/bcm2710-rpi-3-b-plus.dtb | python3 tests/dtb-tests.py
 
