@@ -272,5 +272,5 @@ test-fit:
 test-dtb:
 	mkdir -p testing/dtb
 	cp -f  optee/out/boot/bcm2710-rpi-3-b-plus.dtb testing/dtb/bcm2710-rpi-3-b-plus.dtb
-	u-boot/tools/fdtgrep -n "/signature" -s testing/dtb/bcm2710-rpi-3-b-plus.dtb
+	u-boot/tools/fdtgrep -n "/signature" -s testing/dtb/bcm2710-rpi-3-b-plus.dtb | python3 tests/dtb-tests.py
 
