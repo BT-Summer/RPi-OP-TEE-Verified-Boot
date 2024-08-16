@@ -1,5 +1,7 @@
 # Verified Boot for RPi
 
+[![Makefile CI](https://github.com/BT-Summer/RPi-OP-TEE-Verified-Boot/actions/workflows/makefile.yml/badge.svg)](https://github.com/BT-Summer/RPi-OP-TEE-Verified-Boot/actions/workflows/makefile.yml)
+
 ## Description
 A TEE solution for Raspberry Pi using OP-TEE, built on TF-A, U-Boot, and buildroot.
 This is our implementation to get a version of this working, and is *not* supported by the above projects.
