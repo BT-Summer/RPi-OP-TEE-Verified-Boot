@@ -3,6 +3,7 @@ name: Makefile CI
 on:
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -13,9 +14,9 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: ccache
-      uses: hendrikmuhs/ccache-action@v1.2
+      uses: hendrikmuhs/ccache-action@v1.2.11
       with:
-        key: ${{ hashFiles('dependencies-22.04.txt') }}
+        key: Ubuntu-22.04
 
     - name: Build
       run: make
