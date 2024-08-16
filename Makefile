@@ -91,9 +91,11 @@ build-uboot:
 	git clone git://git.denx.de/u-boot.git
 	cd u-boot && git checkout v2024.07
 	# TODO: Modify the defconfig rather than replace the .config file
+	rm -f u-boot/configs/rpi_3_b_plus_defconfig
+	cp v2024.07-rpi_3_b_plus_fit_defconfig u-boot/configs/rpi_3_b_plus_defconfig
 	$(MAKE) -C ./u-boot rpi_3_b_plus_defconfig
-	rm -f u-boot/.config
-	cp u-boot.config u-boot/.config
+	#rm -f u-boot/.config
+	#cp u-boot.config u-boot/.config
 	$(MAKE) CROSS_COMPILE=aarch64-linux-gnu- -C ./u-boot
 
 # Update a .c file in TF-A to set the register u-boot requires for CONFIG_OF_PRIOR_STAGE 
@@ -136,6 +138,8 @@ image:
 	echo "#### construct sd card image ####"
 	rm -f optee/out/rpi3-sdcard.img
 
+	rm -f optee/out/boot/kernel8.img
+
 	rm -f optee/out/boot/armstub8.bin
 	cp -f armstub/armstub8.bin optee/out/boot/armstub8.bin
 	sudo chmod 755 optee/out/boot/armstub8.bin
@@ -177,7 +181,7 @@ boot-files: clean-boot
 
 	# Copy the required DTBs for mkimage
 	# /bin/dtc -I dts -O dtb -o optee/u-boot/arch/arm/dts/bcm2837-rpi-3-b-plus.dtb optee/u-boot/arch/arm/dts/bcm2837-rpi-3-b-plus.dts
-	cp optee/u-boot/arch/arm/dts/bcm2837-rpi-3-b-plus.dtb bcm2837-rpi-3-b-plus-u-boot.dtb
+	cp u-boot/arch/arm/dts/bcm2837-rpi-3-b-plus.dtb bcm2837-rpi-3-b-plus-u-boot.dtb
 	cp optee/linux/arch/arm64/boot/dts/broadcom/bcm2710-rpi-3-b-plus.dtb bcm2710-rpi-3-b-plus-linux.dtb
 
 	# Add a KASLR seed to the u-boot FDT
