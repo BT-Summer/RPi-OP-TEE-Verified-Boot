@@ -1,21 +1,28 @@
+use clap::Parser;
 use color_eyre::eyre::Result;
 use rand::prelude::*;
-use std::env;
 use std::fs;
 use std::fs::File;
 use std::io::Write;
 
-fn main() {
-    let args: Vec<String> = env::args().collect();
+/// Corrupts a single random byte to a random value in a file
+#[derive(Parser)]
+#[command(version)]
+struct Args {
+    /// Path to the file to corrupt
+    path: String,
+}
 
-    let file = args
-        .get(1)
-        .expect("No file specified\nUsage: corruptor <file name>");
+fn main() -> Result<()> {
+    color_eyre::install()?;
+    let args = Args::parse();
 
-    match randomise_file_byte(file.clone()) {
-        Ok(new_file) => println!("saved corrupted file to {}", new_file),
-        Err(err) => println!("Failed due to: {:?}", err),
-    }
+    let file = args.path;
+
+    let new_file = randomise_file_byte(file.clone())?;
+
+    println!("saved corrupted file to {}", new_file);
+    Ok(())
 }
 
 fn randomise_file_byte(file: String) -> Result<String> {
