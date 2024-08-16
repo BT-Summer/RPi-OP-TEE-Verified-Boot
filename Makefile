@@ -90,7 +90,7 @@ build-uboot:
 	rm -rf u-boot
 	git clone git://git.denx.de/u-boot.git
 	cd u-boot && git checkout v2024.07
-	# TODO: Modify the defconfig rather than replace the .config file
+	
 	rm -f u-boot/configs/rpi_3_b_plus_defconfig
 	cp v2024.07-rpi_3_b_plus_fit_defconfig u-boot/configs/rpi_3_b_plus_defconfig
 	$(MAKE) -C ./u-boot rpi_3_b_plus_defconfig
