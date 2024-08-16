@@ -17,7 +17,7 @@ for part in data:
     if "value" in part:
         val_count += 1
 
-if hash_count < 3:
+if hash_count < 2:
     sys.exit("Found less than two hashes: the FIT file is likely not signed")
 else:
     print("Found " + str(hash_count) + " hash nodes in the FIT file ✓")
