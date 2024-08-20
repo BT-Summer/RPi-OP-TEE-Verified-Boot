@@ -251,7 +251,7 @@ armstub/clean:
 ########## TESTS ######################
 
 .PHONY: test
-test: test-setup test-armstub8 test-fit test-dtb
+test: test-setup test-armstub8 test-fit test-dtb test-key
 
 .PHONY: test-setup
 test-setup:
@@ -281,3 +281,10 @@ test-dtb:
 	cp -f bcm2710-rpi-3-b-plus-linux.dtb testing/dtb/linux.dtb
 	u-boot/tools/fdtgrep -n "/signature" -s testing/dtb/bcm2710-rpi-3-b-plus.dtb | python3 tests/dtb-tests.py
 
+.PHONY: test-key
+test-key:
+	mkdir -p testing/key
+	cp -f optee/out/boot/bcm2710-rpi-3-b-plus.dtb testing/key/u-boot.dtb
+	cp -f optee/out/boot/image.fit testing/key/image.fit
+	cp -f keys/*.crt testing/key/
+	python3 tests/key-tests.py testing/key/dev.crt testing/key/u-boot.dtb testing/key/image.fit
