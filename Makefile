@@ -55,7 +55,7 @@ update-dtbs-2837:
 update-u-boot-env:
 	echo "#### update u-boot env ####"
 	rm -f ./optee/build/rpi3/firmware/uboot.env.txt
-	./config-u-boot-env.sh
+	./config-u-boot-env-netboot.sh
 
 # Not used
 # Update which files the optee Makefile will place into the output disk image
