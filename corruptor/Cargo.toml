@@ -2,6 +2,8 @@
 name = "corruptor"
 version = "0.1.0"
 edition = "2021"
+description = "A CLI tool built in Rust for randomly modifying binary file for use in testing verified and secure boot solutions"
+license-file = "../LICENSE"
 
 [dependencies]
 clap = { version = "4.5.16", features = ["derive"] }
