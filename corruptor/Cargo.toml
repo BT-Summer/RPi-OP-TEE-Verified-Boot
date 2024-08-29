@@ -5,7 +5,7 @@ edition = "2021"
 description = "A CLI tool built in Rust for randomly modifying binary file for use in testing verified and secure boot solutions"
 license-file = "../LICENSE"
 repository = "https://github.com/BT-Summer/RPi-OP-TEE-Verified-Boot"
-keywords = ["cli", "tool", "verified boot", "secure boot", "binary"]
+keywords = ["cli", "tool", "binary", "testing"]
 categories = ["command-line-utilities"]
 
 [dependencies]
