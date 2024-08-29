@@ -1,6 +1,6 @@
 [package]
 name = "corruptor"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "A CLI tool built in Rust for randomly modifying binary file for use in testing verified and secure boot solutions"
 license-file = "../LICENSE"
