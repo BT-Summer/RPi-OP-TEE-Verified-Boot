@@ -24,7 +24,7 @@ nfspath=/srv/nfs/rootfs
 preboot=usb start
 bootcmd=run mmcboot
 set_bootargs_tty=setenv bootargs console=${ttyconsole} console=${sttyconsole},${baudrate}
-set_bootargs_nfs=setenv bootargs ${bootargs} root=/dev/nfs rw rootfs=nfs nfsroot=${nfsserverip}:${nfspath},tcp,nfsvers=4 ip=dhcp smsc95xx.macaddr= dma.dmachans=0x7f35 rootwait 8250.nr_uarts=1 fsck.repair=yes bcm2708_fb.fbwidth=1920 bcm2708_fb.fbheight=1080 vc_mem.mem_base=0x3ec00000 vc_mem.mem_size=0x40000000 dwc_otg.fiq_enable=0 dwc_otg.fiq_fsm_enable=0 dwc_otg.nak_holdoff=0
+set_bootargs_nfs=setenv bootargs ${bootargs} root=/dev/nfs rw rootfs=nfs nfsroot=192.168.1.1:/srv/nfs/rootfs,tcp,nfsvers=4 ip=dhcp smsc95xx.macaddr=${ethaddr} 'dma.dmachans=0x7f35 rootwait 8250.nr_uarts=1 fsck.repair=yes bcm2708_fb.fbwidth=1920 bcm2708_fb.fbheight=1080 vc_mem.mem_base=0x3ec00000 vc_mem.mem_size=0x40000000 dwc_otg.fiq_enable=0 dwc_otg.fiq_fsm_enable=0 dwc_otg.nak_holdoff=0'
 set_common_args=setenv bootargs ${bootargs} smsc95xx.macaddr=${ethaddr} 'dma.dmachans=0x7f35 rootwait 8250.nr_uarts=1 fsck.repair=yes bcm2708_fb.fbwidth=1920 bcm2708_fb.fbheight=1080 vc_mem.mem_base=0x3ec00000 vc_mem.mem_size=0x40000000 dwc_otg.fiq_enable=0 dwc_otg.fiq_fsm_enable=0 dwc_otg.nak_holdoff=0'
 
 # fit boot
